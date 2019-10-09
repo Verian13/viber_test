@@ -479,10 +479,9 @@ class JobItilium:
     def register_new_incident(self, message: str, sender: str):
         print_debug("def register_new_incident")
         quote = "\""
-        doublequote = """""""
         message = message
-        message.replace(doublequote, quote)
-        message.replace("\", "\\")
+        message.replace("\"", "\\\"")
+
         data_to_send = """{
                            "data": {
                            "action": "registration",
