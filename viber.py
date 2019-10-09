@@ -930,7 +930,7 @@ class JobMessage:
             return [TextMessage(text=description), TemplatesKeyboards.get_keyboard_start_message()]
         print_debug("add started action")
         # print_debug("count:" + str(len(list_actions_senders)))
-        return [TextMessage(text="Опишите вашу проблему."), TemplatesKeyboards.get_keyboard_cancel()]
+        return [TextMessage(text="Опишите вашу проблему юзверь."), TemplatesKeyboards.get_keyboard_cancel()]
 
     def start_itilium_modification(self, sender: str):
         print_debug("start_itilium_modification")
