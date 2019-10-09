@@ -480,7 +480,8 @@ class JobItilium:
         print_debug("def register_new_incident")
         quote = "\""
         message = message
-        message.replace('Пр', 'НеПр')
+        message = message.replace('"', '\"')
+        message = message.replace('\', '\\')
 
         data_to_send = """{
                            "data": {
