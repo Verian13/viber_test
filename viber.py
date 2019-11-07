@@ -441,26 +441,31 @@ def proc095761bb67d8455bbf094e32d0e8dc4f(sender_id, message, data, service_data_
     buttons.append({
         "Columns": 6,
         "Rows": 1,
+        "Silent": true,
         "ActionBody": "76456fc5-a5d3-4b54-81dc-b15c34787790",
         "Text": "Зарегистрировать обращение" })
     buttons.append({
         "Columns": 6,
         "Rows": 1,
+        "Silent": true,
         "ActionBody": "91d863c1-0ff0-456b-acb0-86818cac8a03",
         "Text": "Внести уточнения" })
     buttons.append({
         "Columns": 6,
         "Rows": 1,
+        "Silent": true,
         "ActionBody": "5160f46d-71b8-466a-8b28-db1bf17d5392",
         "Text": "Обращения для подтверждения" })
     buttons.append({
         "Columns": 6,
         "Rows": 1,
+        "Silent": true,
         "ActionBody": "cdab1713-d317-452b-bbdb-8a484d513051",
         "Text": "Последние сообщения" })
     buttons.append({
         "Columns": 6,
         "Rows": 1,
+        "Silent": true,
         "ActionBody": "f6829c8b-eb46-4c61-8ab6-3bd31f6bc879",
         "Text": "Получить статус" })
     ViberSendMessages(sender_id, KeyboardMessage(min_api_version=4, keyboard={"InputFieldState": "hidden", "Type": "keyboard", "Buttons": buttons}))
