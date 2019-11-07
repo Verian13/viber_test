@@ -2286,9 +2286,10 @@ def SetFlagStartQuery(sender_id):
             # Execute a command: this creates a new table
             cur.execute("CREATE TABLE data_flags_user (id serial PRIMARY KEY, sender_id varchar(50), flag_id varchar(36) );")
             any_blocks_exist = False
-
-		state = False
-        if any_blocks_exist:			
+	
+	state = False
+        
+	if any_blocks_exist:			
             cur.execute("SELECT FOR UPDATE sender_id, flag_id FROM data_flags_user WHERE sender_id = %s", (sender_id,))            
 			if cur.rowcount > 0:	
 				state = SetFlagId(sender_id, flag_id, cur)			                
