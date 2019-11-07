@@ -1,4 +1,4 @@
-import os   
+import os
 from viberbot import Api
 from viberbot.api.bot_configuration import BotConfiguration
 from viberbot.api.messages import VideoMessage
@@ -17,11 +17,11 @@ from viberbot.api.viber_requests import ViberSubscribedRequest
 from viberbot.api.viber_requests import ViberUnsubscribedRequest
 from viberbot.api.viber_requests import ViberDeliveredRequest
 
-import json    
+import json
 
 def ViberSendMessages(to, messages):
     print("stack: ViberSendMessages")
-    SaveIdSendetCommand(viber.send_messages(to, messages), to)      
+    SaveIdSendetCommand(viber.send_messages(to, messages), to)
 
 def SaveIdSendetCommand(list_tokens, sender_id):
     print("stack: SaveIdSendetCommand")
@@ -112,7 +112,7 @@ def onFailedDeliveredMessage(message_id, sender_id):
         conn.commit()
         # Close communication with the database
     except Exception as e:
-        print("Error on onFailedDeliveredMessage " + e.args[0])
+        print("Error on onFailedDeliveredMessage" + e.args[0])
     finally:
         cur.close()
         conn.close()
@@ -149,7 +149,7 @@ def onDeliveredMessage(message_id, sender_id):
         conn.close()
 
 
-    
+
 def SaveStateToPostgress(sender_id, state_id, carousel_id, data_user, data):
     print("stack: SaveStateToPostgress")
     data_user_string = json.dumps(data_user)
@@ -211,7 +211,7 @@ def RestoreStateFromPostgress(sender_id):
         cur.execute("SELECT sender_id,  state_id,  carousel_id, data_user,  data FROM data_users WHERE sender_id = %s", (sender_id,))
         result_query = cur.fetchone()
         if(not result_query == None):
-            return {'state':True, 'sender_id':result_query[0], 'state_id':result_query[1], 'carousel_id':result_query[2],'data_user':json.loads(result_query[3]), 'data':json.loads(result_query[4])}        
+            return {'state':True, 'sender_id':result_query[0], 'state_id':result_query[1], 'carousel_id':result_query[2],'data_user':json.loads(result_query[3]), 'data':json.loads(result_query[4])}
         else:
             return {'error': is_error, 'state' : False}
 
@@ -257,17 +257,17 @@ def GetIsRegisteredUser(sender_id):
                 return True
             else:
                 return False
-        else:            
+        else:
             text_error = text
             ViberSendMessages(sender_id, TextMessage(text="Ошибка при проверке регистрации, проверьте доступность Основной базы:" + str(text_error)))
-            return False 
+            return False
 
 def GetIdErrorState():
     print("stack: GetIdErrorState")
     return "095761bb-67d8-455b-bf09-4e32d0e8dc4f" #Выбор действия
 
 def ShowCarousel(sender_id, result_list, number_parts):
-    
+
     print("stack: ShowCarousel")
     max_buttons = 42
     if (len(result_list) > max_buttons ):
@@ -277,9 +277,9 @@ def ShowCarousel(sender_id, result_list, number_parts):
         index = 0
         buttons = []
         isEnd = True
-        for id_cortage, title_cortage in result_list:         
+        for id_cortage, title_cortage in result_list:
             id = id_cortage
-            view = title_cortage    
+            view = title_cortage
             if (index > last_number):
                 isEnd = False
                 break
@@ -292,7 +292,7 @@ def ShowCarousel(sender_id, result_list, number_parts):
         if (number_parts > 1 ):
             buttons_keyboard.append({"Columns": 6, "Rows": 1, "ActionBody": "back_data", "Text": "Назад"})
         buttons_keyboard.append({"Columns": 6, "Rows": 1, "ActionBody": "cancel", "Text": "Отменить"})
-        text_keyboard = {"Type": "keyboard","InputFieldState": "hidden", "Buttons": buttons_keyboard}       
+        text_keyboard = {"Type": "keyboard","InputFieldState": "hidden", "Buttons": buttons_keyboard}
         ViberSendMessages(sender_id, [RichMediaMessage(min_api_version=4, rich_media={"Type": "rich_media", "BgColor": "#FFFFFF",
                                                           "Buttons":buttons}), KeyboardMessage(
                                                                    keyboard=text_keyboard, min_api_version=4)])
@@ -302,7 +302,7 @@ def ShowCarousel(sender_id, result_list, number_parts):
         buttons_keyboard = []
         for id_cortage, title_cortage  in result_list:
             id = id_cortage
-            view = title_cortage    
+            view = title_cortage
             buttons.append({"TextVAlign": "top", "TextHAlign": "left", "ActionBody": id, "Text": view})
         buttons_keyboard.append({"Columns": 6, "Rows": 1, "ActionBody": "cancel", "Text": "Отменить"})
         text_keyboard.update({"Buttons": buttons_keyboard})
@@ -362,7 +362,7 @@ def proc_function02957edd8e984dd4a0aa530f15bba971(sender_id, message, data, serv
                 return "0"
             else:
                 return "1"
-        else:            
+        else:
             text_error = text
             return "error" # В процедуре обработке надо направить на нужное состояние
 
@@ -409,7 +409,7 @@ def proc_function1b68be2d5a9a4d06adb59b874e1673ea(sender_id, text, data, carouse
             else:
                 ViberSendMessages(sender_id, TextMessage(text=text))
                 return "1"
-        else:            
+        else:
             text_error = text
             ViberSendMessages(sender_id, TextMessage(text="error with code:" + str(text_error)))
             return "error" # В процедуре обработке надо направить на нужное состояние
@@ -442,31 +442,26 @@ def proc095761bb67d8455bbf094e32d0e8dc4f(sender_id, message, data, service_data_
         "Columns": 6,
         "Rows": 1,
         "ActionBody": "76456fc5-a5d3-4b54-81dc-b15c34787790",
-        "Silent": true,
         "Text": "Зарегистрировать обращение" })
     buttons.append({
         "Columns": 6,
         "Rows": 1,
         "ActionBody": "91d863c1-0ff0-456b-acb0-86818cac8a03",
-        "Silent": true,   
         "Text": "Внести уточнения" })
     buttons.append({
         "Columns": 6,
         "Rows": 1,
         "ActionBody": "5160f46d-71b8-466a-8b28-db1bf17d5392",
-        "Silent": true,
         "Text": "Обращения для подтверждения" })
     buttons.append({
         "Columns": 6,
         "Rows": 1,
         "ActionBody": "cdab1713-d317-452b-bbdb-8a484d513051",
-        "Silent": true,
         "Text": "Последние сообщения" })
     buttons.append({
         "Columns": 6,
         "Rows": 1,
         "ActionBody": "f6829c8b-eb46-4c61-8ab6-3bd31f6bc879",
-        "Silent": true,
         "Text": "Получить статус" })
     ViberSendMessages(sender_id, KeyboardMessage(min_api_version=4, keyboard={"InputFieldState": "hidden", "Type": "keyboard", "Buttons": buttons}))
     if not SaveState(sender_id, "95761bb-67d8-455b-bf09-4e32d0e8dc4f0", service_data_bot_need, data, carousel_id): #proc_expect_user_button_click095761bb67d8455bbf094e32d0e8dc4f
@@ -489,7 +484,7 @@ def proc_expect_user_button_click095761bb67d8455bbf094e32d0e8dc4f(sender_id, mes
         proccdab1713d317452bbbdb8a484d513051(sender_id, message, data, service_data_bot_need, carousel_id) #Последние сообщения
     elif command == "f6829c8b-eb46-4c61-8ab6-3bd31f6bc879":
         procf6829c8beb464c618ab63bd31f6bc879(sender_id, message, data, service_data_bot_need, carousel_id) #Получить статус
-    else: 
+    else:
         proc095761bb67d8455bbf094e32d0e8dc4f(sender_id, message, data, service_data_bot_need, carousel_id) #Выбор действия
 
 def proc76456fc5a5d34b5481dcb15c34787790(sender_id, message, data, service_data_bot_need, carousel_id):
@@ -539,10 +534,10 @@ def proc_function76456fc5a5d34b5481dcb15c34787790(sender_id, text, data, carouse
         ViberSendMessages(sender_id, TextMessage(text="Ошибка:" + text_error))
         return "error_network" # В процедуре обработке надо направить на нужное состояние
     else:
-        if state:        
+        if state:
             ViberSendMessages(sender_id, TextMessage(text=str("Зарегистрирован документ:" + str(text))))
             return "OK" # В процедуре обработке надо направить на нужное состояние, если требуется
-        else:            
+        else:
             text_error = text
             ViberSendMessages(sender_id, TextMessage(text=str(text_error)))
             return "error_in_itilium" # В процедуре обработке надо направить на нужное состояние
@@ -601,12 +596,12 @@ def proc_function91d863c10ff0456bacb086818cac8a03(sender_id, message, data, serv
             else:
                 list_ret = []
                 list_ret_full = []
-                for incident in list:            
+                for incident in list:
                     list_ret.append((incident.get('id'),incident.get('view')))
                     list_ret_full.append((incident.get('id'),incident.get('detail_view')))
                 data.update({'list_open_incidents_full':list_ret_full, "list_open_incidents": list_ret})
                 return "confirm_incidents_carousel"
-        else:            
+        else:
             text_error = text
             ViberSendMessages(sender_id, TextMessage(text=str(text_error)))
             return "error_in_itilium" # В процедуре обработке надо направить на нужное состояние
@@ -622,14 +617,14 @@ def proc1252095275704b2a907cb2e089e0ed77(sender_id, message, data, service_data_
         ViberSendMessages(sender_id, TextMessage(text="ERROR SAVE STATE"))
         GoToStateError(sender_id, message, GetIdErrorState(), {}, {}, "")
         return
-        
-    number_parts = 1;       
-    temp = service_data_bot_need.get("number_parts1252095275704b2a907cb2e089e0ed77")        
+
+    number_parts = 1;
+    temp = service_data_bot_need.get("number_parts1252095275704b2a907cb2e089e0ed77")
     if not temp == None:
         number_parts = temp
     result_list = proc_get_list_corteges1252095275704b2a907cb2e089e0ed77(sender_id, data, carousel_id)
     if isinstance(result_list, list):
-        
+
         ShowCarousel(sender_id, result_list, number_parts)
         service_data_bot_need.update({"number_parts1252095275704b2a907cb2e089e0ed77":number_parts})
         if not SaveState(sender_id, "2520952-7570-4b2a-907c-b2e089e0ed771", service_data_bot_need, data, carousel_id): #proc_expect_comand_user1252095275704b2a907cb2e089e0ed77
@@ -651,20 +646,20 @@ def proc_expect_comand_user1252095275704b2a907cb2e089e0ed77(sender_id, message, 
     if id == "cancel":
         proca0981bccc8ee486e943257b9de36f2d1(sender_id, message, data, service_data_bot_need, carousel_id) #Уточнения не внесены(команда "Отменить")
     elif id == "more_data":
-            
-        number_parts = 1        
+
+        number_parts = 1
         temp = service_data_bot_need.get("number_parts1252095275704b2a907cb2e089e0ed77")
         if not temp == None:
-            number_parts = temp     
-        service_data_bot_need.update({"number_parts1252095275704b2a907cb2e089e0ed77": number_parts + 1})    
+            number_parts = temp
+        service_data_bot_need.update({"number_parts1252095275704b2a907cb2e089e0ed77": number_parts + 1})
         proc1252095275704b2a907cb2e089e0ed77(sender_id, message, data, service_data_bot_need, carousel_id) #Переход на вывод дополнительных непоместившихся элементов
     elif id == "back_data":
-            
-        number_parts = 1        
+
+        number_parts = 1
         temp = service_data_bot_need.get("number_parts1252095275704b2a907cb2e089e0ed77")
         if not temp == None:
-            number_parts = temp     
-        service_data_bot_need.update({"number_parts1252095275704b2a907cb2e089e0ed77": number_parts - 1})    
+            number_parts = temp
+        service_data_bot_need.update({"number_parts1252095275704b2a907cb2e089e0ed77": number_parts - 1})
         proc1252095275704b2a907cb2e089e0ed77(sender_id, message, data, service_data_bot_need, carousel_id) #Переход на вывод предыдущих элементов
     else:
         carousel_id = id
@@ -680,7 +675,7 @@ def proc84c5c09c78824f2f819bd1eef1b3913e(sender_id, message, data, service_data_
         carousel_id = ''
         data = {}
     ViberSendMessages(sender_id, TextMessage(text="Выбранное обращение"))
-    
+
     detail_view = proc_get_user_detail_view_by_id84c5c09c78824f2f819bd1eef1b3913e(sender_id, carousel_id, data)
     ViberSendMessages(sender_id, TextMessage(text=detail_view))
     return
@@ -730,7 +725,7 @@ def proc_expect_user_button_clicked689fd18d5942468b1892b7a2f97292(sender_id, mes
         procbb53668eeb8e4153bdf7a72781739830(sender_id, message, data, service_data_bot_need, carousel_id) #Ввести уточнение
     elif command == "2ad315bd-42ff-45b8-85ae-cdc9d04c0a9e":
         proc2ad315bd42ff45b885aecdc9d04c0a9e(sender_id, message, data, service_data_bot_need, carousel_id) #Отмена
-    else: 
+    else:
         proc095761bb67d8455bbf094e32d0e8dc4f(sender_id, message, data, service_data_bot_need, carousel_id) #Выбор действия
 
 def procbb53668eeb8e4153bdf7a72781739830(sender_id, message, data, service_data_bot_need, carousel_id):
@@ -782,7 +777,7 @@ def proc_functionbb53668eeb8e4153bdf7a72781739830(sender_id, text, data, carouse
     else:
         if state:
             return "OK" # В процедуре обработке надо направить на нужное состояние, если требуется
-        else:            
+        else:
             text_error = text
             ViberSendMessages(sender_id, TextMessage(text=str(text_error)))
             return "error_in_itilium" # В процедуре обработке надо направить на нужное состояние
@@ -856,7 +851,7 @@ def proc_expect_user_button_click4cca60de6e5643a0a27b251f132fafac(sender_id, mes
         proc971494b8473d4fbe94c686b320392d3a(sender_id, message, data, service_data_bot_need, carousel_id) #Введите уточнение
     elif command == "29615d83-6647-459d-ac36-095a2b7287cc":
         proc29615d836647459dac36095a2b7287cc(sender_id, message, data, service_data_bot_need, carousel_id) #Отмена
-    else: 
+    else:
         proc095761bb67d8455bbf094e32d0e8dc4f(sender_id, message, data, service_data_bot_need, carousel_id) #Выбор действия
 
 def proc971494b8473d4fbe94c686b320392d3a(sender_id, message, data, service_data_bot_need, carousel_id):
@@ -891,14 +886,14 @@ def proc5160f46d71b8466a8b28db1bf17d5392(sender_id, message, data, service_data_
         GoToStateError(sender_id, message, GetIdErrorState(), {}, {}, "")
         return
     ViberSendMessages(sender_id, TextMessage(text="Обращения для подтверждения"))
-        
-    number_parts = 1;       
-    temp = service_data_bot_need.get("number_parts5160f46d71b8466a8b28db1bf17d5392")        
+
+    number_parts = 1;
+    temp = service_data_bot_need.get("number_parts5160f46d71b8466a8b28db1bf17d5392")
     if not temp == None:
         number_parts = temp
     result_list = proc_get_list_corteges5160f46d71b8466a8b28db1bf17d5392(sender_id, data, carousel_id)
     if isinstance(result_list, list):
-        
+
         ShowCarousel(sender_id, result_list, number_parts)
         service_data_bot_need.update({"number_parts5160f46d71b8466a8b28db1bf17d5392":number_parts})
         if not SaveState(sender_id, "160f46d-71b8-466a-8b28-db1bf17d53925", service_data_bot_need, data, carousel_id): #proc_expect_comand_user5160f46d71b8466a8b28db1bf17d5392
@@ -922,19 +917,19 @@ def proc_get_list_corteges5160f46d71b8466a8b28db1bf17d5392(sender_id, data, caro
         ViberSendMessages(sender_id, TextMessage(text="Ошибка:" + text_error))
         return "error_network" # В процедуре обработке надо направить на нужное состояние
     else:
-        if state:               
-            # data.update({'detail_text':text})       
+        if state:
+            # data.update({'detail_text':text})
             list = json.loads(text)
             if len(list) == 0:
-                return "no_data"   
+                return "no_data"
             list_ret = []
             list_ret_full = []
-            for incident in list:            
+            for incident in list:
                 list_ret.append((incident.get('id'),incident.get('view')))
                 list_ret_full.append((incident.get('id'),incident.get('detail_view')))
             data.update({'list_open_incidents':list_ret_full})
             return list_ret # В процедуре обработке надо направить на нужное состояние, если требуется
-        else:            
+        else:
             text_error = text
             ViberSendMessages(sender_id, TextMessage(text=str(text_error)))
             return "error_in_itilium" # В процедуре обработке надо направить на нужное состояние
@@ -947,20 +942,20 @@ def proc_expect_comand_user5160f46d71b8466a8b28db1bf17d5392(sender_id, message, 
     if id == "cancel":
         proc095761bb67d8455bbf094e32d0e8dc4f(sender_id, message, data, service_data_bot_need, carousel_id) #Выбор действия(команда "Отменить")
     elif id == "more_data":
-            
-        number_parts = 1        
+
+        number_parts = 1
         temp = service_data_bot_need.get("number_parts5160f46d71b8466a8b28db1bf17d5392")
         if not temp == None:
-            number_parts = temp     
-        service_data_bot_need.update({"number_parts5160f46d71b8466a8b28db1bf17d5392": number_parts + 1})    
+            number_parts = temp
+        service_data_bot_need.update({"number_parts5160f46d71b8466a8b28db1bf17d5392": number_parts + 1})
         proc5160f46d71b8466a8b28db1bf17d5392(sender_id, message, data, service_data_bot_need, carousel_id) #Переход на вывод дополнительных непоместившихся элементов
     elif id == "back_data":
-            
-        number_parts = 1        
+
+        number_parts = 1
         temp = service_data_bot_need.get("number_parts5160f46d71b8466a8b28db1bf17d5392")
         if not temp == None:
-            number_parts = temp     
-        service_data_bot_need.update({"number_parts5160f46d71b8466a8b28db1bf17d5392": number_parts - 1})    
+            number_parts = temp
+        service_data_bot_need.update({"number_parts5160f46d71b8466a8b28db1bf17d5392": number_parts - 1})
         proc5160f46d71b8466a8b28db1bf17d5392(sender_id, message, data, service_data_bot_need, carousel_id) #Переход на вывод предыдущих элементов
     else:
         carousel_id = id
@@ -1012,7 +1007,7 @@ def proc_expect_user_button_clickdae1f3640d8a4eb0aed3fc1b63e187aa(sender_id, mes
         proc3ec26f31a5dd4ff7a95fc7c612cf273a(sender_id, message, data, service_data_bot_need, carousel_id) #Отклонить
     elif command == "42747c5a-b756-49b0-b830-bcf82d3dca9c":
         proc42747c5ab75649b0b830bcf82d3dca9c(sender_id, message, data, service_data_bot_need, carousel_id) #Назад
-    else: 
+    else:
         proc095761bb67d8455bbf094e32d0e8dc4f(sender_id, message, data, service_data_bot_need, carousel_id) #Выбор действия
 
 def proc5ba6c9fdcb214aa2972c4020574f3157(sender_id, message, data, service_data_bot_need, carousel_id):
@@ -1057,13 +1052,13 @@ def proc_function5ba6c9fdcb214aa2972c4020574f3157(sender_id, message, data, serv
             rating_exist = dictionary.get('rating_exist')
             data.update(dictionary)
             if need_rating:
-                return "need_rating"    
+                return "need_rating"
             elif rating_exist:
-                return "rating_exist"        
-            else:   
-                data.update({"rating":-1, "comment": ""})     
-                return "confirm"    
-        else:            
+                return "rating_exist"
+            else:
+                data.update({"rating":-1, "comment": ""})
+                return "confirm"
+        else:
             text_error = text
             ViberSendMessages(sender_id, TextMessage(text=str(text_error)))
             return "error_in_itilium" # В процедуре обработке надо направить на нужное состояние
@@ -1134,7 +1129,7 @@ def proc_expect_user_button_clicka22a380f1e104600808c465bd6ab3777(sender_id, mes
         proc619fd5ff848446fd8f2217bb68bc6a3b(sender_id, message, data, service_data_bot_need, carousel_id) #5
     elif command == "e6d53aa2-210b-4ed3-8e9f-5e6cea9bc777":
         proce6d53aa2210b4ed38e9f5e6cea9bc777(sender_id, message, data, service_data_bot_need, carousel_id) #Отменить
-    else: 
+    else:
         proc095761bb67d8455bbf094e32d0e8dc4f(sender_id, message, data, service_data_bot_need, carousel_id) #Выбор действия
 
 def procf78d807143864b3f8cd291a0d503f281(sender_id, message, data, service_data_bot_need, carousel_id):
@@ -1156,7 +1151,7 @@ def procf78d807143864b3f8cd291a0d503f281(sender_id, message, data, service_data_
 def proc_functionf78d807143864b3f8cd291a0d503f281(sender_id, message, data, service_data_bot_need, carousel_id):
     #1 (функция программного выбора)
     print("stack: proc_functionf78d807143864b3f8cd291a0d503f281")
-    data.update({"rating":1})     
+    data.update({"rating":1})
     if data.get('one_need_comment'):
         return "need_comment_surely"
     else:
@@ -1199,7 +1194,7 @@ def proc_function_expect_userd2aeca9275214a6caa98de3001dd081f(sender_id, message
 def proc_functiond2aeca9275214a6caa98de3001dd081f(sender_id, text, data, carousel_id):
     #Указать комментарий обязательно (функция обработки выбора с клавиатуры)
     print("stack: proc_functiond2aeca9275214a6caa98de3001dd081f")
-    data.update({"comment": text})     
+    data.update({"comment": text})
     return "save"
 
 def proc4f2c3d625e2f4665bf75177d4363273c(sender_id, message, data, service_data_bot_need, carousel_id):
@@ -1239,7 +1234,7 @@ def proc_function_expect_user4f2c3d625e2f4665bf75177d4363273c(sender_id, message
 def proc_function4f2c3d625e2f4665bf75177d4363273c(sender_id, text, data, carousel_id):
     #Указать комментарий необязательно (функция обработки выбора с клавиатуры)
     print("stack: proc_function4f2c3d625e2f4665bf75177d4363273c")
-    data.update({"comment": text})     
+    data.update({"comment": text})
     return "save"
 
 def procf8baff8bac014776849ff22db27006da(sender_id, message, data, service_data_bot_need, carousel_id):
@@ -1271,7 +1266,7 @@ def proc70a014c3ff72418abb1b94326c535cd6(sender_id, message, data, service_data_
 def proc_function70a014c3ff72418abb1b94326c535cd6(sender_id, message, data, service_data_bot_need, carousel_id):
     #2 (функция программного выбора)
     print("stack: proc_function70a014c3ff72418abb1b94326c535cd6")
-    data.update({"rating":2})     
+    data.update({"rating":2})
     if data.get('two_need_comment'):
         return "need_comment_surely"
     else:
@@ -1296,7 +1291,7 @@ def proc1c315c3c887a489b95522e1316af7b35(sender_id, message, data, service_data_
 def proc_function1c315c3c887a489b95522e1316af7b35(sender_id, message, data, service_data_bot_need, carousel_id):
     #3 (функция программного выбора)
     print("stack: proc_function1c315c3c887a489b95522e1316af7b35")
-    data.update({"rating":3})     
+    data.update({"rating":3})
     if data.get('three_need_comment'):
         return "need_comment_surely"
     else:
@@ -1321,7 +1316,7 @@ def proc12a983c4102340aa85d7d182b9a7e2c5(sender_id, message, data, service_data_
 def proc_function12a983c4102340aa85d7d182b9a7e2c5(sender_id, message, data, service_data_bot_need, carousel_id):
     #4 (функция программного выбора)
     print("stack: proc_function12a983c4102340aa85d7d182b9a7e2c5")
-    data.update({"rating":4})     
+    data.update({"rating":4})
     if data.get('four_need_comment'):
         return "need_comment_surely"
     else:
@@ -1346,7 +1341,7 @@ def proc619fd5ff848446fd8f2217bb68bc6a3b(sender_id, message, data, service_data_
 def proc_function619fd5ff848446fd8f2217bb68bc6a3b(sender_id, message, data, service_data_bot_need, carousel_id):
     #5 (функция программного выбора)
     print("stack: proc_function619fd5ff848446fd8f2217bb68bc6a3b")
-    data.update({"rating":5})     
+    data.update({"rating":5})
     if data.get('five_need_comment'):
         return "need_comment_surely"
     else:
@@ -1436,7 +1431,7 @@ def proc_expect_user_button_clickd454043806d1401f87b5ab49f4142f18(sender_id, mes
         proc45188a2fe76f463da9304c5a53876d70(sender_id, message, data, service_data_bot_need, carousel_id) #Пропустить
     elif command == "c937a519-2897-450e-bc6b-ca9aa2c743e2":
         procc937a5192897450ebc6bca9aa2c743e2(sender_id, message, data, service_data_bot_need, carousel_id) #Отменить
-    else: 
+    else:
         proc095761bb67d8455bbf094e32d0e8dc4f(sender_id, message, data, service_data_bot_need, carousel_id) #Выбор действия
 
 def proc8fe801703cea47eb8291e37e9d4751aa(sender_id, message, data, service_data_bot_need, carousel_id):
@@ -1506,10 +1501,10 @@ def proc45188a2fe76f463da9304c5a53876d70(sender_id, message, data, service_data_
 def proc_function45188a2fe76f463da9304c5a53876d70(sender_id, message, data, service_data_bot_need, carousel_id):
     #Пропустить (функция программного выбора)
     print("stack: proc_function45188a2fe76f463da9304c5a53876d70")
-    data.update({"rating":-1})     
-    data.update({"comment": ""})     
+    data.update({"rating":-1})
+    data.update({"comment": ""})
     return "save"
-    
+
 
 def procc937a5192897450ebc6bca9aa2c743e2(sender_id, message, data, service_data_bot_need, carousel_id):
     #Отменить
@@ -1551,9 +1546,9 @@ def proc_function01a9eda608194126be9830251a261e42(sender_id, message, data, serv
         ViberSendMessages(sender_id, TextMessage(text="Ошибка:" + text_error))
         return "error_network" # В процедуре обработке надо направить на нужное состояние
     else:
-        if state:                 
-            return "OK" # В процедуре обработке надо направить на нужное состояние, если требуется        
-        else:            
+        if state:
+            return "OK" # В процедуре обработке надо направить на нужное состояние, если требуется
+        else:
             text_error = text
             ViberSendMessages(sender_id, TextMessage(text=str(text_error)))
             return "error_in_itilium" # В процедуре обработке надо направить на нужное состояние
@@ -1607,7 +1602,7 @@ def proc_function3ec26f31a5dd4ff7a95fc7c612cf273a(sender_id, text, data, carouse
     else:
         if state:
             return "OK" # В процедуре обработке надо направить на нужное состояние, если требуется
-        else:            
+        else:
             text_error = text
             ViberSendMessages(sender_id, TextMessage(text=str(text_error)))
             return "error_in_itilium" # В процедуре обработке надо направить на нужное состояние
@@ -1652,7 +1647,7 @@ def procdbb86b04001b4aa587bd0598114130e3(sender_id, message, data, service_data_
         carousel_id = ''
         data = {}
     ViberSendMessages(sender_id, TextMessage(text="Выбранное обращение"))
-    
+
     detail_view = proc_get_user_detail_view_by_iddbb86b04001b4aa587bd0598114130e3(sender_id, carousel_id, data)
     ViberSendMessages(sender_id, TextMessage(text=detail_view))
     return
@@ -1720,14 +1715,14 @@ def proccdab1713d317452bbbdb8a484d513051(sender_id, message, data, service_data_
         ViberSendMessages(sender_id, TextMessage(text="ERROR SAVE STATE"))
         GoToStateError(sender_id, message, GetIdErrorState(), {}, {}, "")
         return
-        
-    number_parts = 1;       
-    temp = service_data_bot_need.get("number_partscdab1713d317452bbbdb8a484d513051")        
+
+    number_parts = 1;
+    temp = service_data_bot_need.get("number_partscdab1713d317452bbbdb8a484d513051")
     if not temp == None:
         number_parts = temp
     result_list = proc_get_list_cortegescdab1713d317452bbbdb8a484d513051(sender_id, data, carousel_id)
     if isinstance(result_list, list):
-        
+
         ShowCarousel(sender_id, result_list, number_parts)
         service_data_bot_need.update({"number_partscdab1713d317452bbbdb8a484d513051":number_parts})
         if not SaveState(sender_id, "dab1713-d317-452b-bbdb-8a484d513051c", service_data_bot_need, data, carousel_id): #proc_expect_comand_usercdab1713d317452bbbdb8a484d513051
@@ -1752,19 +1747,19 @@ def proc_get_list_cortegescdab1713d317452bbbdb8a484d513051(sender_id, data, caro
         return "error_network" # В процедуре обработке надо направить на нужное состояние
     else:
         if state:
-            # data.update({'detail_text':text})       
+            # data.update({'detail_text':text})
             list = json.loads(text)
             list_ret = []
             list_ret_full = []
             if len(list) == 0:
                 ViberSendMessages(sender_id, TextMessage(text="Нет сообщений за последние 5 дней"))
                 return "OK"
-            for incident in list:            
+            for incident in list:
                 list_ret.append((incident.get('id'),incident.get('view')))
                 list_ret_full.append((incident.get('id'),incident.get('detail_view')))
             data.update({'list_open_incidents_full':list_ret_full,"list_open_incidents": list_ret})
             return list_ret # В процедуре обработке надо направить на нужное состояние, если требуется
-        else:            
+        else:
             text_error = text
             ViberSendMessages(sender_id, TextMessage(text=str(text_error)))
             return "error_in_itilium" # В процедуре обработке надо направить на нужное состояние
@@ -1777,20 +1772,20 @@ def proc_expect_comand_usercdab1713d317452bbbdb8a484d513051(sender_id, message, 
     if id == "cancel":
         proc095761bb67d8455bbf094e32d0e8dc4f(sender_id, message, data, service_data_bot_need, carousel_id) #Выбор действия(команда "Отменить")
     elif id == "more_data":
-            
-        number_parts = 1        
+
+        number_parts = 1
         temp = service_data_bot_need.get("number_partscdab1713d317452bbbdb8a484d513051")
         if not temp == None:
-            number_parts = temp     
-        service_data_bot_need.update({"number_partscdab1713d317452bbbdb8a484d513051": number_parts + 1})    
+            number_parts = temp
+        service_data_bot_need.update({"number_partscdab1713d317452bbbdb8a484d513051": number_parts + 1})
         proccdab1713d317452bbbdb8a484d513051(sender_id, message, data, service_data_bot_need, carousel_id) #Переход на вывод дополнительных непоместившихся элементов
     elif id == "back_data":
-            
-        number_parts = 1        
+
+        number_parts = 1
         temp = service_data_bot_need.get("number_partscdab1713d317452bbbdb8a484d513051")
         if not temp == None:
-            number_parts = temp     
-        service_data_bot_need.update({"number_partscdab1713d317452bbbdb8a484d513051": number_parts - 1})    
+            number_parts = temp
+        service_data_bot_need.update({"number_partscdab1713d317452bbbdb8a484d513051": number_parts - 1})
         proccdab1713d317452bbbdb8a484d513051(sender_id, message, data, service_data_bot_need, carousel_id) #Переход на вывод предыдущих элементов
     else:
         carousel_id = id
@@ -1805,7 +1800,7 @@ def proc9e625d3af5e246b2b30e56242d8be3e5(sender_id, message, data, service_data_
         service_data_bot_need = {}
         carousel_id = ''
         data = {}
-    
+
     detail_view = proc_get_user_detail_view_by_id9e625d3af5e246b2b30e56242d8be3e5(sender_id, carousel_id, data)
     ViberSendMessages(sender_id, TextMessage(text=detail_view))
     return
@@ -1855,7 +1850,7 @@ def proc_expect_user_button_click6263c108cd6443a2b3678ab97a445fc7(sender_id, mes
         procf7dc6d456b094b7c8dff0942edf2acb5(sender_id, message, data, service_data_bot_need, carousel_id) #Новое сообщение
     elif command == "11c28422-61c5-4d9f-863b-a2457b97e4ae":
         proc11c2842261c54d9f863ba2457b97e4ae(sender_id, message, data, service_data_bot_need, carousel_id) #Отмена
-    else: 
+    else:
         proc095761bb67d8455bbf094e32d0e8dc4f(sender_id, message, data, service_data_bot_need, carousel_id) #Выбор действия
 
 def procf7dc6d456b094b7c8dff0942edf2acb5(sender_id, message, data, service_data_bot_need, carousel_id):
@@ -1906,7 +1901,7 @@ def proc_functionf7dc6d456b094b7c8dff0942edf2acb5(sender_id, text, data, carouse
     else:
         if state:
             return "OK" # В процедуре обработке надо направить на нужное состояние, если требуется
-        else:            
+        else:
             text_error = text
             ViberSendMessages(sender_id, TextMessage(text=str(text_error)))
             return "error_in_itilium" # В процедуре обработке надо направить на нужное состояние
@@ -1954,14 +1949,14 @@ def procf6829c8beb464c618ab63bd31f6bc879(sender_id, message, data, service_data_
         ViberSendMessages(sender_id, TextMessage(text="ERROR SAVE STATE"))
         GoToStateError(sender_id, message, GetIdErrorState(), {}, {}, "")
         return
-        
-    number_parts = 1;       
-    temp = service_data_bot_need.get("number_partsf6829c8beb464c618ab63bd31f6bc879")        
+
+    number_parts = 1;
+    temp = service_data_bot_need.get("number_partsf6829c8beb464c618ab63bd31f6bc879")
     if not temp == None:
         number_parts = temp
     result_list = proc_get_list_cortegesf6829c8beb464c618ab63bd31f6bc879(sender_id, data, carousel_id)
     if isinstance(result_list, list):
-        
+
         ShowCarousel(sender_id, result_list, number_parts)
         service_data_bot_need.update({"number_partsf6829c8beb464c618ab63bd31f6bc879":number_parts})
         if not SaveState(sender_id, "6829c8b-eb46-4c61-8ab6-3bd31f6bc879f", service_data_bot_need, data, carousel_id): #proc_expect_comand_userf6829c8beb464c618ab63bd31f6bc879
@@ -1984,16 +1979,16 @@ def proc_get_list_cortegesf6829c8beb464c618ab63bd31f6bc879(sender_id, data, caro
         return "error_network" # В процедуре обработке надо направить на нужное состояние
     else:
         if state:
-            # data.update({'detail_text':text})       
+            # data.update({'detail_text':text})
             list = json.loads(text)
             list_ret = []
             list_ret_full = []
-            for incident in list:            
+            for incident in list:
                 list_ret.append((incident.get('id'),incident.get('view')))
                 list_ret_full.append((incident.get('id'),incident.get('detail_view')))
             data.update({'list_open_incidents':list_ret_full })
             return list_ret # В процедуре обработке надо направить на нужное состояние, если требуется
-        else:            
+        else:
             text_error = text
             ViberSendMessages(sender_id, TextMessage(text=str(text_error)))
             return "error_in_itilium" # В процедуре обработке надо направить на нужное состояние
@@ -2006,20 +2001,20 @@ def proc_expect_comand_userf6829c8beb464c618ab63bd31f6bc879(sender_id, message, 
     if id == "cancel":
         proc095761bb67d8455bbf094e32d0e8dc4f(sender_id, message, data, service_data_bot_need, carousel_id) #Выбор действия(команда "Отменить")
     elif id == "more_data":
-            
-        number_parts = 1        
+
+        number_parts = 1
         temp = service_data_bot_need.get("number_partsf6829c8beb464c618ab63bd31f6bc879")
         if not temp == None:
-            number_parts = temp     
-        service_data_bot_need.update({"number_partsf6829c8beb464c618ab63bd31f6bc879": number_parts + 1})    
+            number_parts = temp
+        service_data_bot_need.update({"number_partsf6829c8beb464c618ab63bd31f6bc879": number_parts + 1})
         procf6829c8beb464c618ab63bd31f6bc879(sender_id, message, data, service_data_bot_need, carousel_id) #Переход на вывод дополнительных непоместившихся элементов
     elif id == "back_data":
-            
-        number_parts = 1        
+
+        number_parts = 1
         temp = service_data_bot_need.get("number_partsf6829c8beb464c618ab63bd31f6bc879")
         if not temp == None:
-            number_parts = temp     
-        service_data_bot_need.update({"number_partsf6829c8beb464c618ab63bd31f6bc879": number_parts - 1})    
+            number_parts = temp
+        service_data_bot_need.update({"number_partsf6829c8beb464c618ab63bd31f6bc879": number_parts - 1})
         procf6829c8beb464c618ab63bd31f6bc879(sender_id, message, data, service_data_bot_need, carousel_id) #Переход на вывод предыдущих элементов
     else:
         carousel_id = id
@@ -2034,7 +2029,7 @@ def procea557c1bbda64ec0a0c7ad3e4f493afc(sender_id, message, data, service_data_
         service_data_bot_need = {}
         carousel_id = ''
         data = {}
-    
+
     detail_view = proc_get_user_detail_view_by_idea557c1bbda64ec0a0c7ad3e4f493afc(sender_id, carousel_id, data)
     ViberSendMessages(sender_id, TextMessage(text=detail_view))
     return
@@ -2077,7 +2072,7 @@ def proc_expect_user_button_click17c11a9477c8493db93470bdbee77ffc(sender_id, mes
     command = GetTextCommand(message)
     if command == "542a39f9-c585-4d3c-a971-2192a781019f":
         proc542a39f9c5854d3ca9712192a781019f(sender_id, message, data, service_data_bot_need, carousel_id) #Закрыть
-    else: 
+    else:
         proc095761bb67d8455bbf094e32d0e8dc4f(sender_id, message, data, service_data_bot_need, carousel_id) #Выбор действия
 
 def proc542a39f9c5854d3ca9712192a781019f(sender_id, message, data, service_data_bot_need, carousel_id):
@@ -2121,7 +2116,7 @@ def proc_expect_user_button_click6cc30e06b21a4176892b507ee382b3e8(sender_id, mes
     command = GetTextCommand(message)
     if command == "5c625ad3-ac90-4009-97e7-d2e0b64d18c3":
         proc5c625ad3ac90400997e7d2e0b64d18c3(sender_id, message, data, service_data_bot_need, carousel_id) #да
-    else: 
+    else:
         proc095761bb67d8455bbf094e32d0e8dc4f(sender_id, message, data, service_data_bot_need, carousel_id) #Выбор действия
 
 def proc5c625ad3ac90400997e7d2e0b64d18c3(sender_id, message, data, service_data_bot_need, carousel_id):
@@ -2149,7 +2144,7 @@ list_procs.update( { '12520952-7570-4b2a-907c-b2e089e0ed77': proc1252095275704b2
 list_procs.update( { '2520952-7570-4b2a-907c-b2e089e0ed771': proc_expect_comand_user1252095275704b2a907cb2e089e0ed77,'2520952-7570-4b2a-907c-b2e089e0ed771without_registration': False} )
 list_procs.update( { '84c5c09c-7882-4f2f-819b-d1eef1b3913e': proc84c5c09c78824f2f819bd1eef1b3913e,'84c5c09c-7882-4f2f-819b-d1eef1b3913ewithout_registration': False} )
 list_procs.update( { 'ed689fd1-8d59-4246-8b18-92b7a2f97292': proced689fd18d5942468b1892b7a2f97292,'ed689fd1-8d59-4246-8b18-92b7a2f97292without_registration': False} )
-list_procs.update( { 'd689fd1-8d59-4246-8b18-92b7a2f97292e': proc_expect_user_button_clicked689fd18d5942468b1892b7a2f97292,'d689fd1-8d59-4246-8b18-92b7a2f97292ewithout_registration': False} ) 
+list_procs.update( { 'd689fd1-8d59-4246-8b18-92b7a2f97292e': proc_expect_user_button_clicked689fd18d5942468b1892b7a2f97292,'d689fd1-8d59-4246-8b18-92b7a2f97292ewithout_registration': False} )
 list_procs.update( { 'bb53668e-eb8e-4153-bdf7-a72781739830': procbb53668eeb8e4153bdf7a72781739830,'bb53668e-eb8e-4153-bdf7-a72781739830without_registration': False} )
 list_procs.update( { 'b53668e-eb8e-4153-bdf7-a72781739830b': proc_function_expect_userbb53668eeb8e4153bdf7a72781739830,'b53668e-eb8e-4153-bdf7-a72781739830bwithout_registration': False} )
 list_procs.update( { '2ad315bd-42ff-45b8-85ae-cdc9d04c0a9e': proc2ad315bd42ff45b885aecdc9d04c0a9e,'2ad315bd-42ff-45b8-85ae-cdc9d04c0a9ewithout_registration': False} )
@@ -2162,7 +2157,7 @@ list_procs.update( { '29615d83-6647-459d-ac36-095a2b7287cc': proc29615d836647459
 list_procs.update( { '5160f46d-71b8-466a-8b28-db1bf17d5392': proc5160f46d71b8466a8b28db1bf17d5392,'5160f46d-71b8-466a-8b28-db1bf17d5392without_registration': False} )
 list_procs.update( { '160f46d-71b8-466a-8b28-db1bf17d53925': proc_expect_comand_user5160f46d71b8466a8b28db1bf17d5392,'160f46d-71b8-466a-8b28-db1bf17d53925without_registration': False} )
 list_procs.update( { 'dae1f364-0d8a-4eb0-aed3-fc1b63e187aa': procdae1f3640d8a4eb0aed3fc1b63e187aa,'dae1f364-0d8a-4eb0-aed3-fc1b63e187aawithout_registration': False} )
-list_procs.update( { 'ae1f364-0d8a-4eb0-aed3-fc1b63e187aad': proc_expect_user_button_clickdae1f3640d8a4eb0aed3fc1b63e187aa,'ae1f364-0d8a-4eb0-aed3-fc1b63e187aadwithout_registration': False} ) 
+list_procs.update( { 'ae1f364-0d8a-4eb0-aed3-fc1b63e187aad': proc_expect_user_button_clickdae1f3640d8a4eb0aed3fc1b63e187aa,'ae1f364-0d8a-4eb0-aed3-fc1b63e187aadwithout_registration': False} )
 list_procs.update( { '5ba6c9fd-cb21-4aa2-972c-4020574f3157': proc5ba6c9fdcb214aa2972c4020574f3157,'5ba6c9fd-cb21-4aa2-972c-4020574f3157without_registration': False} )
 list_procs.update( { 'a22a380f-1e10-4600-808c-465bd6ab3777': proca22a380f1e104600808c465bd6ab3777,'a22a380f-1e10-4600-808c-465bd6ab3777without_registration': False} )
 list_procs.update( { '22a380f-1e10-4600-808c-465bd6ab3777a': proc_expect_user_button_clicka22a380f1e104600808c465bd6ab3777,'22a380f-1e10-4600-808c-465bd6ab3777awithout_registration': False} )
@@ -2201,7 +2196,7 @@ list_procs.update( { 'cdab1713-d317-452b-bbdb-8a484d513051': proccdab1713d317452
 list_procs.update( { 'dab1713-d317-452b-bbdb-8a484d513051c': proc_expect_comand_usercdab1713d317452bbbdb8a484d513051,'dab1713-d317-452b-bbdb-8a484d513051cwithout_registration': False} )
 list_procs.update( { '9e625d3a-f5e2-46b2-b30e-56242d8be3e5': proc9e625d3af5e246b2b30e56242d8be3e5,'9e625d3a-f5e2-46b2-b30e-56242d8be3e5without_registration': False} )
 list_procs.update( { '6263c108-cd64-43a2-b367-8ab97a445fc7': proc6263c108cd6443a2b3678ab97a445fc7,'6263c108-cd64-43a2-b367-8ab97a445fc7without_registration': False} )
-list_procs.update( { '263c108-cd64-43a2-b367-8ab97a445fc76': proc_expect_user_button_click6263c108cd6443a2b3678ab97a445fc7,'263c108-cd64-43a2-b367-8ab97a445fc76without_registration': False} ) 
+list_procs.update( { '263c108-cd64-43a2-b367-8ab97a445fc76': proc_expect_user_button_click6263c108cd6443a2b3678ab97a445fc7,'263c108-cd64-43a2-b367-8ab97a445fc76without_registration': False} )
 list_procs.update( { 'f7dc6d45-6b09-4b7c-8dff-0942edf2acb5': procf7dc6d456b094b7c8dff0942edf2acb5,'f7dc6d45-6b09-4b7c-8dff-0942edf2acb5without_registration': False} )
 list_procs.update( { '7dc6d45-6b09-4b7c-8dff-0942edf2acb5f': proc_function_expect_userf7dc6d456b094b7c8dff0942edf2acb5,'7dc6d45-6b09-4b7c-8dff-0942edf2acb5fwithout_registration': False} )
 list_procs.update( { '11c28422-61c5-4d9f-863b-a2457b97e4ae': proc11c2842261c54d9f863ba2457b97e4ae,'11c28422-61c5-4d9f-863b-a2457b97e4aewithout_registration': False} )
@@ -2211,13 +2206,13 @@ list_procs.update( { 'f6829c8b-eb46-4c61-8ab6-3bd31f6bc879': procf6829c8beb464c6
 list_procs.update( { '6829c8b-eb46-4c61-8ab6-3bd31f6bc879f': proc_expect_comand_userf6829c8beb464c618ab63bd31f6bc879,'6829c8b-eb46-4c61-8ab6-3bd31f6bc879fwithout_registration': False} )
 list_procs.update( { 'ea557c1b-bda6-4ec0-a0c7-ad3e4f493afc': procea557c1bbda64ec0a0c7ad3e4f493afc,'ea557c1b-bda6-4ec0-a0c7-ad3e4f493afcwithout_registration': False} )
 list_procs.update( { '17c11a94-77c8-493d-b934-70bdbee77ffc': proc17c11a9477c8493db93470bdbee77ffc,'17c11a94-77c8-493d-b934-70bdbee77ffcwithout_registration': False} )
-list_procs.update( { '7c11a94-77c8-493d-b934-70bdbee77ffc1': proc_expect_user_button_click17c11a9477c8493db93470bdbee77ffc,'7c11a94-77c8-493d-b934-70bdbee77ffc1without_registration': False} ) 
+list_procs.update( { '7c11a94-77c8-493d-b934-70bdbee77ffc1': proc_expect_user_button_click17c11a9477c8493db93470bdbee77ffc,'7c11a94-77c8-493d-b934-70bdbee77ffc1without_registration': False} )
 list_procs.update( { '542a39f9-c585-4d3c-a971-2192a781019f': proc542a39f9c5854d3ca9712192a781019f,'542a39f9-c585-4d3c-a971-2192a781019fwithout_registration': False} )
 list_procs.update( { '6cc30e06-b21a-4176-892b-507ee382b3e8': proc6cc30e06b21a4176892b507ee382b3e8,'6cc30e06-b21a-4176-892b-507ee382b3e8without_registration': False} )
 list_procs.update( { 'cc30e06-b21a-4176-892b-507ee382b3e86': proc_expect_user_button_click6cc30e06b21a4176892b507ee382b3e8,'cc30e06-b21a-4176-892b-507ee382b3e86without_registration': False} )
 list_procs.update( { '5c625ad3-ac90-4009-97e7-d2e0b64d18c3': proc5c625ad3ac90400997e7d2e0b64d18c3,'5c625ad3-ac90-4009-97e7-d2e0b64d18c3without_registration': False} )
-    
-def GetIdFirstState():      
+
+def GetIdFirstState():
     print("stack: GetIdFirstState")
     return "02957edd-8e98-4dd4-a0aa-530f15bba971"
 
@@ -2241,16 +2236,8 @@ def SetFlagStopQuery(sender_id):
             return True
         else:
             cur.execute("SELECT sender_id, flag_id FROM data_flags_user WHERE sender_id = %s", (sender_id,))
-            if cur.rowcount > 0:
-                result_query = cur.fetchone()
-                if result_query[1] == "1": #Удалим флаг
-                    cur.execute("DELETE FROM data_flags_user WHERE sender_id = %s", (sender_id,));
-                    conn.commit()
-                    return True
-                else:
-                    cur.execute("DELETE FROM data_flags_user WHERE sender_id = %s", (sender_id,));
-                    conn.commit()
-                    return True
+            if cur.rowcount > 0:                                
+                cur.execute("UPDATE data_flags_user SET flag_id = %s WHERE sender_id = %s", ("0",sender_id));                
             else:
                 conn.commit()
                 return True
@@ -2266,6 +2253,25 @@ def SetFlagStopQuery(sender_id):
         cur.close()
         conn.close()
 
+def CreateCurrentUserRecord(sender_id, cur):
+	#Заблокируем таблицу
+	cur.execute("LOCK TABLE data_flags_user IN SHARE ROW EXCLUSIVE MODE")
+	cur.execute("SELECT FOR UPDATE sender_id, flag_id FROM data_flags_user WHERE sender_id = %s", (sender_id,))
+	#Вставим строку текущего пользователя
+	if cur.rowcount == 0:				
+		cur.execute("INSERT INTO data_flags_user (sender_id, flag_id) VALUES (%s, %s)",(sender_id, "1"))		
+		return True
+	else:
+		return False
+
+def SetFlagId(sender_id, flag_id, cur):
+	result_query = cur.fetchone()
+	if result_query[1] == "1": #Запрос задан - мы просто ждем		
+		return False
+	else: # удалим строку и вскинем флаг и вернем True
+		cur.execute("UPDATE data_flags_user SET flag_id = %s WHERE sender_id = %s", (flag_id, sender_id));		
+		return True                    
+		
 def SetFlagStartQuery(sender_id):
     print("stack: SetFlagStartQuery")
     try:
@@ -2275,35 +2281,33 @@ def SetFlagStartQuery(sender_id):
         # Open a cursor to perform database operations
         cur = conn.cursor()
         cur.execute("select * from information_schema.tables where table_name=%s", ('data_flags_user',))
-        need_stop_check = True
+        any_blocks_exist = True
         if(cur.rowcount == 0):
             # Execute a command: this creates a new table
             cur.execute("CREATE TABLE data_flags_user (id serial PRIMARY KEY, sender_id varchar(50), flag_id varchar(36) );")
-            need_stop_check = False
+            any_blocks_exist = False
 
-        need_new_string = False
-        if need_stop_check:
-            cur.execute("SELECT sender_id, flag_id FROM data_flags_user WHERE sender_id = %s", (sender_id,))
-            if cur.rowcount > 0:
-                result_query = cur.fetchone()
-                if result_query[1] == "1": #Запрос задан - мы просто ждем
-                    conn.commit()
-                    return False
-                else: # удалим строку и вскинем флаг и вернем True
-                    cur.execute("DELETE FROM data_flags_user WHERE sender_id = %s", (sender_id,));
-                    need_new_string = True
-            else: #вскинем флаг и вернем True
-                need_new_string = True
-        else: #вскинем флаг и вернем True
-            need_new_string = True
-        if need_new_string == True:
-            # Pass data to fill a query placeholders and let Psycopg perform
-            # the correct conversion (no more SQL injections!)
-            cur.execute("INSERT INTO data_flags_user (sender_id, flag_id) VALUES (%s, %s)",
-                (sender_id, "1"))
+		state = False
+        if any_blocks_exist:			
+            cur.execute("SELECT FOR UPDATE sender_id, flag_id FROM data_flags_user WHERE sender_id = %s", (sender_id,))            
+			if cur.rowcount > 0:	
+				state = SetFlagId(sender_id, flag_id, cur)			                
+            else: 
+                if CreateCurrentUserRecord(sender_id, cur) :
+					state = True
+				else:
+					state = SetFlagId(sender_id, flag_id, cur)			
+				
+        else:
+			if CreateCurrentUserRecord(sender_id, cur) :			
+				state = True
+			else:	
+				cur.execute("SELECT FOR UPDATE sender_id, flag_id FROM data_flags_user WHERE sender_id = %s", (sender_id,))            
+				state = SetFlagId(sender_id, "1", cur)			
+		
        # Make the changes to the database persistent
         conn.commit()
-        return True
+        return state
         # Close communication with the database
     except Exception as e:
         print("Error on SetFlagStartQuery:" + e.args[0])
@@ -2364,18 +2368,18 @@ def RequestItilium(dict_data):
        response = requests.post(address_api_itilium, data=json.dumps(dict_data).encode('utf-8'),
                             auth=(login_itilium, password_itilium))
        code = response.status_code
-       description = response.text  
+       description = response.text
        print("  code: " + str(code))
        print("  description: " + description)
        if (code == 200):
-           return False, description, True  
+           return False, description, True
        else:
-           return False, str(code) + ' ' + description, False       
-    except: 
-       return True, "Ошибка соединения с Итилиум. Обратитесь к администратору.", False          
+           return False, str(code) + ' ' + description, False
+    except:
+       return True, "Ошибка соединения с Итилиум. Обратитесь к администратору.", False
 
 def GetIdStateForClearData():
-    print("stack: GetIdStateForClearData")  
+    print("stack: GetIdStateForClearData")
     return "095761bb-67d8-455b-bf09-4e32d0e8dc4f"
 
 def GoToStateFirst(sender_id, message, state_id, data, data_user, carousel_id):
@@ -2390,32 +2394,32 @@ def GoToStateError(sender_id, message, state_id, data, data_user, carousel_id):
 
 def GoToStateByID(sender_id, message, state_id, service_data_bot_need, data_user, carousel_id):
     print("stack: GoToStateByID")
-    procedure = list_procs.get(state_id)    
+    procedure = list_procs.get(state_id)
     if not isinstance(service_data_bot_need, dict):
         service_data_bot_need = {}
     if not isinstance(data_user, dict):
-        data_user = {}  
+        data_user = {}
     procedure(sender_id, message, data_user, service_data_bot_need, carousel_id)
-    
+
     return
 
 def GoToCurrentState(sender_id, message, is_registered_user):
     print("stack: GoToCurrentState")
     try:
         result_restore, is_error, state_id, data, data_user, carousel_id = RestoreState(sender_id)
-        if result_restore:  
+        if result_restore:
             if is_registered_user == False:
                 if list_procs.get(state_id + 'without_registration') == True:
                     print("stack: before GoToStateByID: " + state_id)
-                    GoToStateByID(sender_id, message, state_id, data, data_user, carousel_id)           
+                    GoToStateByID(sender_id, message, state_id, data, data_user, carousel_id)
                 else:
                     GoToStateFirst(sender_id, message, GetIdFirstState(), data, data_user, carousel_id)
             else:
                 print("stack: before GoToStateByID: " + state_id)
-                GoToStateByID(sender_id, message, state_id, data, data_user, carousel_id)           
+                GoToStateByID(sender_id, message, state_id, data, data_user, carousel_id)
         else:
             if is_error:
-                ViberSendMessages(sender_id, TextMessage(text="ERROR RESTORE STATE"))                
+                ViberSendMessages(sender_id, TextMessage(text="ERROR RESTORE STATE"))
                 GoToStateError(sender_id, message, GetIdErrorState(), data, data_user, carousel_id)
             else:
                 GoToStateFirst(sender_id, message, GetIdFirstState(), data, data_user, carousel_id)
@@ -2423,11 +2427,11 @@ def GoToCurrentState(sender_id, message, is_registered_user):
         print("Ошибка при GoToCurrentState: " + e.args[0])
         ViberSendMessages(sender_id, TextMessage(text="ERROR RESTORE STATE"))
         GoToStateError(sender_id, message, GetIdErrorState(), {}, {}, "")
-    return              
+    return
 
 def SetHooksIfNeed():
     print("stack: SetHooksIfNeed")
-    need_hook = False   
+    need_hook = False
     try:
         need_drop = False
         DATABASE_URL = os.environ['DATABASE_URL']
@@ -2472,14 +2476,14 @@ def SetHooksIfNeed():
         conn.close()
     return True, need_hook, ""
 
-app = Flask(__name__)       
-    
+app = Flask(__name__)
+
 viber = Api(BotConfiguration(
     name='Itilium-bot',
     avatar='http://site.com/avatar.jpg',
     auth_token=auth_token_out
 ))
-    
+
 @app.route('/',  methods=['GET'])
 def IncomingGet():
     state, need_hook, error = SetHooksIfNeed()
@@ -2487,45 +2491,43 @@ def IncomingGet():
         if need_hook:
             return "Регистрация бота прошла успешно"
         else:
-            return "Бот был зарегистрирован ранее"    
+            return "Бот был зарегистрирован ранее"
     else:
         return "Ошибка при регистрации бота." + error.args[0] + "\n Попробуйте вручную (см. документацию)"
-                                               
+
 @app.route('/',  methods=['POST'])
 def incoming():
     if not viber.verify_signature(request.get_data(), request.headers.get('X-Viber-Content-Signature')):
         return Response(status=403)
     viber_request = viber.parse_request(request.get_data())
 
-    if isinstance(viber_request, ViberMessageRequest):  
+    if isinstance(viber_request, ViberMessageRequest):
         sender_id = viber_request.sender.id
         message = viber_request.message
-        # Это не 100% семафор
         if ExistNotDeliveredCommands(sender_id):
             print("Есть недоставленные сообщения от бота для пользователя. Не обрабатываем")
             return Response(status=200)
-        if GetFlagStopQuery(sender_id) == True:
-            print("Повторный запрос")
-            return Response(status=200)
-        else:
-            if SetFlagStartQuery(sender_id) == True:
-                try:
-                    is_registered_user = GetIsRegisteredUser(sender_id)
-                    GoToCurrentState(sender_id, message, is_registered_user)
-                except Exception as e:
-                    print ("Error:"+ e.args[0])
-                finally:
-                    SetFlagStopQuery(sender_id)
-            else:
-                print("Повторный запрос")
-                return Response(status=200)
-        
-    elif isinstance(viber_request, ViberSubscribedRequest):        
+      
+		if SetFlagStartQuery(sender_id) == True:
+			try:
+				is_registered_user = GetIsRegisteredUser(sender_id)
+				GoToCurrentState(sender_id, message, is_registered_user)
+			except Exception as e:
+				print ("Error:"+ e.args[0])
+			finally:
+				SetFlagStopQuery(sender_id)
+		else:
+			print("Повторный запрос")
+			return Response(status=200)
+
+    elif isinstance(viber_request, ViberSubscribedRequest):
         ViberSendMessages(viber_request.sender.id, TextMessage(text="Вы зарегистрированы"))
-    elif isinstance(viber_request, ViberFailedRequest):        
+    elif isinstance(viber_request, ViberFailedRequest):
         onFailedDeliveredMessage(viber_request._message_token, viber_request._user_id)
+        print("НЕ Доставлено " + str(viber_request._message_token))
     elif isinstance(viber_request, ViberDeliveredRequest):
         onDeliveredMessage(viber_request._message_token, viber_request._user_id)
+        print("Доставлено " + str(viber_request._message_token))
     elif isinstance(viber_request, ViberConversationStartedRequest) :
         ViberSendMessages(viber_request.sender.id, [TextMessage(text="Добрый день. Вы подписались на бота Итилиум")])
 
